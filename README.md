@@ -1,6 +1,6 @@
 - Run with 'make'
 - Usage:
--   ./gacha -s(standard banner bull) -c characterName (limited banner pull) -w weaponName(weapon banner pull) n(number of pulls)
+-   ./gacha -s(standard banner bull) -c characterName (limited banner pull) -w 'weaponName'(weapon banner pull) n(number of pulls)
 -   Only one call from either (-s, -c characterName, or -w weaponName)
 
 Just a simple gacha-game simulator based off Genshin Impact.
