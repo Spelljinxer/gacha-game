@@ -1,3 +1,4 @@
+//@author Reiden Rufin
 #include <stdio.h>
 #include <stdlib.h>
 
