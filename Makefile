@@ -1,3 +1,4 @@
+#@author Reiden Rufin
 PROJECT = gacha
 HEADERS = $(PROJECT).h 
 OBJ = gacha.o 
