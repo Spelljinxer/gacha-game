@@ -35,8 +35,8 @@ void execute_gacha(char **array, char* times, char* name)
     }
     for(int i = 0; i < atoi(times); i++)
     {
-        number_of_pulls++;
-        four_star_pity++;
+        sleep(1);
+        
         float upper = 1.00000;
         float x = ((float)rand()/(float)(RAND_MAX)) * upper;
         
@@ -46,7 +46,7 @@ void execute_gacha(char **array, char* times, char* name)
             int rng = fifty_fifty(STANDARD_FIVE_STARS_CHARACTERS);
             if((rng == 1 && guaranteed_pity == 1) || d >= 89) //we won 50/50
             {
-                printf("Won the 50/50 in exactly %d pulls. Character Pulled: %s\n", number_of_pulls, name);
+                printf("Won the 50/50 in exactly %d pulls. Your pull: %s\n", number_of_pulls, name);
                 guaranteed = false;
                 write_to_guaranteed("guaranteed.txt", guaranteed);
             }
@@ -58,7 +58,7 @@ void execute_gacha(char **array, char* times, char* name)
                     srand((unsigned) time(&t));
                     int index = rand() %5;
 
-                    printf("Lost the 50/50 in %d pulls. Character Pulled:\t%s\n", number_of_pulls, array[index]);
+                    printf("Lost the 50/50 in %d pulls. Your pull:\t%s\n", number_of_pulls, array[index]);
                     guaranteed = true;
                     write_to_guaranteed("guaranteed.txt", guaranteed);
                     reset_pity("pity.txt");
@@ -80,6 +80,8 @@ void execute_gacha(char **array, char* times, char* name)
             printf("Three star pulled: %s\n", THREE_STAR_ARRAY[index]);
             add_pity();
         }
+        number_of_pulls++;
+        four_star_pity++;
     }
 }
 
@@ -186,7 +188,7 @@ void execute_gacha_standard(char** array, char* times)
 //----------------------------------------------------
 int main(int argc, char*argv[])
 {
-    //add check here = print_usage();
+    
 
     int opt;
     opterr = 0;
@@ -197,12 +199,20 @@ int main(int argc, char*argv[])
     {
         if(opt == 's')
         {   
+            if(argc != 3)
+            {
+                print_usage();
+            }
             printf("Rolling...\n");
             
             execute_gacha_standard(STANDARD_FIVE_STARS_CHARACTERS, times);
         }
         else if (opt == 'c')
         {
+            if(argc != 4)
+            {
+                print_usage();
+            }
             name = optarg;
             CHECK_ALLOC(name);
             printf("Rolling...\n");
@@ -212,9 +222,13 @@ int main(int argc, char*argv[])
         }
         else if (opt == 'w')
         {
+            if(argc != 4)
+            {
+                print_usage();
+            }
             weap = optarg;
             CHECK_ALLOC(weap);
-            printf("Weapon %s\n", weap);
+            printf("Rolling...\n");
             append_to_array(STANDARD_FIVE_STARS_WEAPONS, weap);
             execute_gacha(STANDARD_FIVE_STARS_WEAPONS, times, weap);
         }
