@@ -14,11 +14,11 @@
 #include <getopt.h>
 
 #include "gacha.h"
-#define OPTLIST "sc:w::"
+#define OPTLIST "sc:w:"
 
 
 //------------------------------------------------------------------------------
-void execute_gacha(char* times, char* name)
+void execute_gacha(char **array, char* times, char* name)
 {
     srand((unsigned int)time(NULL));
     int number_of_pulls = 0;
@@ -58,7 +58,7 @@ void execute_gacha(char* times, char* name)
                     srand((unsigned) time(&t));
                     int index = rand() %5;
 
-                    printf("Lost the 50/50 in %d pulls. Character Pulled:\t%s\n", number_of_pulls, STANDARD_FIVE_STARS_CHARACTERS[index]);
+                    printf("Lost the 50/50 in %d pulls. Character Pulled:\t%s\n", number_of_pulls, array[index]);
                     guaranteed = true;
                     write_to_guaranteed("guaranteed.txt", guaranteed);
                     reset_pity("pity.txt");
@@ -83,7 +83,7 @@ void execute_gacha(char* times, char* name)
     }
 }
 
-void execute_gacha_standard(char* times)
+void execute_gacha_standard(char** array, char* times)
 {
     
     srand((unsigned int)time(NULL));
@@ -94,14 +94,14 @@ void execute_gacha_standard(char* times)
     
     if(d >= 89)
     {
-        int rng = fifty_fifty(STANDARD_FIVE_STARS_CHARACTERS);
+        int rng = fifty_fifty(array);
             if((rng == 1 || guaranteed_pity == 1)) //we won a 5* character
             {
                 time_t t;
                 srand((unsigned) time(&t));
                 int index = rand() %5;
 
-                printf("Won a standard character in %d pulls with guaranteed pity. Character Pulled: %s\n", number_of_pulls, STANDARD_FIVE_STARS_CHARACTERS[index]);
+                printf("Won a standard character in %d pulls with guaranteed pity. Character Pulled: %s\n", number_of_pulls, array[index]);
 
                 guaranteed = false;
                 write_to_guaranteed("guaranteed.txt", guaranteed);
@@ -114,7 +114,7 @@ void execute_gacha_standard(char* times)
                     srand((unsigned) time(&t));
                     int index = rand() %10;
 
-                    printf("Won a standard weapon in %d pulls. Weapon Pulled:\t%s\n", number_of_pulls, STANDARD_FIVE_STARS_WEAPONS[index]);
+                    printf("Won a standard weapon in %d pulls. Weapon Pulled:\t%s\n", number_of_pulls, array[index]);
                     guaranteed = true;
                     write_to_guaranteed("guaranteed.txt", guaranteed);
                     reset_pity("pity.txt");
@@ -133,14 +133,14 @@ void execute_gacha_standard(char* times)
         
         if(x <= 0.006 || pity_counter >= 89)
         {
-            int rng = fifty_fifty(STANDARD_FIVE_STARS_CHARACTERS);
+            int rng = fifty_fifty(array);
             if((rng == 1 || guaranteed_pity == 1)) //we won a 5* character
             {
                 time_t t;
                 srand((unsigned) time(&t));
                 int index = rand() %5;
 
-                printf("Won a standard character in %d pulls. Character Pulled: %s\n", number_of_pulls, STANDARD_FIVE_STARS_CHARACTERS[index]);
+                printf("Won a standard character in %d pulls. Character Pulled: %s\n", number_of_pulls, array[index]);
 
                 guaranteed = false;
                 write_to_guaranteed("guaranteed.txt", guaranteed);
@@ -156,7 +156,7 @@ void execute_gacha_standard(char* times)
                     int index = rand() %10;
                     int no = number_of_lines("pity.txt");
                     printf("no is %d\n", no);
-                    printf("Won a standard weapon in %d pulls. Weapon Pulled: %s\n", number_of_pulls, STANDARD_FIVE_STARS_WEAPONS[index]);
+                    printf("Won a standard weapon in %d pulls. Weapon Pulled: %s\n", number_of_pulls, array[index]);
                     guaranteed = true;
                     write_to_guaranteed("guaranteed.txt", guaranteed);
                     reset_pity("pity.txt");
@@ -191,7 +191,7 @@ int main(int argc, char*argv[])
     int opt;
     opterr = 0;
     char* name = NULL;
-    char* weap1 = NULL;
+    char* weap = NULL;
     char*times = argv[argc-1];
     while((opt = getopt(argc, argv, OPTLIST)) != -1)
     {
@@ -199,7 +199,7 @@ int main(int argc, char*argv[])
         {   
             printf("Rolling...\n");
             
-            execute_gacha_standard(times);
+            execute_gacha_standard(STANDARD_FIVE_STARS_CHARACTERS, times);
         }
         else if (opt == 'c')
         {
@@ -208,12 +208,15 @@ int main(int argc, char*argv[])
             printf("Rolling...\n");
             
             append_to_array(STANDARD_FIVE_STARS_CHARACTERS, name);
-            execute_gacha(times, name);
+            execute_gacha(STANDARD_FIVE_STARS_CHARACTERS, times, name);
         }
         else if (opt == 'w')
         {
-            weap1 = optarg;
-            CHECK_ALLOC(weap1);     
+            weap = optarg;
+            CHECK_ALLOC(weap);
+            printf("Weapon %s\n", weap);
+            append_to_array(STANDARD_FIVE_STARS_WEAPONS, weap);
+            execute_gacha(STANDARD_FIVE_STARS_WEAPONS, times, weap);
         }
         else
         {
