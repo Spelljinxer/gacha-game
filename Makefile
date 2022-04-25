@@ -1,4 +1,4 @@
-#@author Reiden Rufin
+#@author Hidden for Privacy.
 PROJECT = gacha
 HEADERS = $(PROJECT).h 
 OBJ = gacha.o 
