@@ -1,4 +1,4 @@
-#@author Hidden for Privacy.
+#@author Spelljinxer.
 PROJECT = gacha
 HEADERS = $(PROJECT).h 
 OBJ = gacha.o 
